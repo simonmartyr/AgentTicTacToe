@@ -2,12 +2,4 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/gui/Frame.java</file>
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/logic/Facade.java</file>
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/agent/Belief.java</file>
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/agent/Agent.java</file>
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/agent/ICanWin.java</file>
-        <file>file:/C:/Users/Si/Google%20Drive/Agent%20Based/AgentGame/src/agent/ICanBlockAWin.java</file>
-    </open-files>
 </project-private>
