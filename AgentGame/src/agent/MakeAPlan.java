@@ -30,7 +30,7 @@ public class MakeAPlan extends Belief {
     
     if(!thePlan.isEmpty()){ //we have a plan
       if(planAchieveable()){
-        final int move = getRandomInRange( 1, thePlan.size( ) );
+        int move = getRandomInRange( 1, thePlan.size( ) );
         action = thePlan.get(move); //make this move
         thePlan.remove(move); //clear from move list
         predicate = true;  
@@ -38,7 +38,7 @@ public class MakeAPlan extends Belief {
       else{
         if(createAPlan()) //new plan
         {
-          final int move = getRandomInRange( 1, thePlan.size( ) );
+          int move = getRandomInRange( 1, thePlan.size( ) );
           action = thePlan.get(move); //make this move
           thePlan.remove(move); //clear from move list
           predicate = true; 
@@ -49,7 +49,11 @@ public class MakeAPlan extends Belief {
     
     if(plans.isEmpty()){ //we dont have any plans
       if(createAPlan()){
-        final int move = getRandomInRange( 1, thePlan.size( ) );
+        int move = getRandomInRange( 1, thePlan.size( ) );
+        for(int i=0; i< thePlan.size(); i++){
+          System.out.println(thePlan.get(i).getRow() + "" + thePlan.get(i).getColumn());
+        }
+        
         action = thePlan.get(move); //make this move
         thePlan.remove(move); //clear from move list
         predicate = true;  
@@ -65,7 +69,8 @@ public class MakeAPlan extends Belief {
      Horizontal();
      Vertical();
      Diagonal();
-     final int randomNumber = getRandomInRange( 1, plans.size( ) ); // choose a plan at random
+     int randomNumber = getRandomInRange( 1, plans.size( ) ); // choose a plan at random
+     System.out.println(randomNumber);
      if(!plans.isEmpty())
      {
        populate = plans.get(randomNumber);
@@ -83,6 +88,8 @@ public class MakeAPlan extends Belief {
        check = thePlan.get(i);
        if(grid[check.getRow()][check.getColumn()] == FiniteStateMachine.State.cross)
        {
+         thePlan.clear();
+         plans.clear();
          return false;
        }       
        if(grid[check.getRow()][check.getColumn()] == FiniteStateMachine.State.nought)
@@ -112,6 +119,7 @@ public class MakeAPlan extends Belief {
         index++;
         crossCount = 0;
         blankCount = 0;
+        location = new Action[3];
       }
       index = 0;
     }
@@ -138,6 +146,7 @@ public class MakeAPlan extends Belief {
         index++;
         crossCount = 0;
         blankCount = 0;
+        location = new Action[3];
       }
       index = 0;
     }
@@ -175,6 +184,8 @@ public class MakeAPlan extends Belief {
           plans.add(location);
         }
       }
+      crossCount = 0;
+      blankCount = 0;
     }      
     
     private int getRandomInRange( int lower, int higher )

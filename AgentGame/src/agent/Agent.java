@@ -20,25 +20,38 @@ public class Agent {
     win = new ICanWin(fsm);
     move = new ICanMakeAMove(fsm);
     block = new ICanBlockAWin(fsm);
-    plan = new MakeAPlan(fsm);
   }
   
-  public Action getNextMove( ){
-    Action result = null;
-    win.update();
-    plan.update();
-    move.update();
-    block.update();
+  public Action getNextMove(FiniteStateMachine fsm){
+    win = new ICanWin(fsm);
+    move = new ICanMakeAMove(fsm);
+    block = new ICanBlockAWin(fsm); //reset
     
-    if(win.isTrue()){
+    if(plan == null){
+      plan = new MakeAPlan(fsm); //dont wanna reset the plan
+    }
+    else{
+      plan.updateFSM(fsm);
+    }
+    
+    Action result = null;
+    
+    win.update();
+    if(win.isTrue()){ //hierarchy
       return win.getAction();
     }
+    
+    block.update();
     if(block.isTrue()){
       return block.getAction();
     }
+    
+    plan.update(); //update belifes
     if(plan.isTrue()){
-      return move.getAction();
+      return plan.getAction();
     }
+    
+    move.update();
     if(move.isTrue()){
       result = move.getAction();
     }

@@ -4,8 +4,8 @@
  */
 package logic;
 
-import agent.Agent; 
 import agent.Action;
+import agent.Agent;
 import logic.FiniteStateMachine.State;
 
 /**
@@ -17,7 +17,7 @@ public class Facade {
     private FiniteStateMachine finny = new FiniteStateMachine();
     private FiniteStateMachine.State gameState; 
     private RuleEngine thomas = new RuleEngine();
-    private Agent james; 
+    private Agent james = new Agent(finny); 
     private boolean move = true;
     
     public boolean makeMove(String location) { //player
@@ -36,8 +36,7 @@ public class Facade {
     
     public int[] agentsMove(){
       int[] location = new int[2];
-      james = new Agent(finny);
-      Action acmove = james.getNextMove();
+      Action acmove = james.getNextMove(finny);
       location[0] = acmove.getRow();
       location[1] = acmove.getColumn();
       finny.updateCell(location[0], location[1], State.nought); //update
@@ -59,6 +58,7 @@ public class Facade {
     
     public void newGame(){ //reset everything
      finny = new FiniteStateMachine();
+     james = new Agent(finny);
      
     }
 }

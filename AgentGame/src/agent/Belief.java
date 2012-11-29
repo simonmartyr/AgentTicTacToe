@@ -42,6 +42,12 @@ public abstract class Belief {
   /**
    *  update the belief
    */
+  
+  public void updateFSM(FiniteStateMachine fsm)
+  {
+    grid = fsm.getGrid();
+  }
+  
   public abstract void update( );
   /**
    *  get the action as determined from the belief
