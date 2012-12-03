@@ -5,10 +5,10 @@
 package gui;
 
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.GradientPaint;
-import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import logic.Facade;
 /**
@@ -16,18 +16,21 @@ import logic.Facade;
  * @author s2-martyr
  */
 public class Frame extends javax.swing.JFrame {
-  private Facade game = new Facade();
-  private boolean gameOver = false;
- 
+  Facade game = new Facade();
+  boolean gameOver = false, move = true;
+  ImageIcon pirate = new javax.swing.ImageIcon(getClass().getResource("/images/Pirates.png"));
+  ImageIcon ninja = new javax.swing.ImageIcon(getClass().getResource("/images/Ninja.png"));
+  
     /**
      * Creates new form AgentFrame
      */
+  
     public Frame() {
         initComponents();   
         setLocation(100, 100);
-        setSize(700, 600);
+        setSize(800, 700);
     }
-
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,7 +47,10 @@ public class Frame extends javax.swing.JFrame {
     playerTwo = new javax.swing.JLabel();
     scoreTwo = new javax.swing.JLabel();
     emptyPanel = new javax.swing.JPanel();
+    jLabel1 = new javax.swing.JLabel();
     newButtonPanel = new javax.swing.JPanel();
+    jLabel2 = new javax.swing.JLabel();
+    jLabel3 = new javax.swing.JLabel();
     newGame = new javax.swing.JButton();
     gamePanel = new javax.swing.JPanel();
     grid11 = new javax.swing.JLabel();
@@ -59,38 +65,52 @@ public class Frame extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Agent Frame");
+    setMinimumSize(new java.awt.Dimension(600, 546));
+    setPreferredSize(new java.awt.Dimension(600, 504));
+    setResizable(false);
 
     controlPanel.setLayout(new java.awt.BorderLayout());
 
-    scorePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Scores:"));
+    scorePanel.setBackground(new java.awt.Color(143, 107, 57));
+    scorePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Scores:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 51))); // NOI18N
     scorePanel.setLayout(new java.awt.GridLayout(2, 2));
 
-    playerOne.setText("Player 1:");
+    playerOne.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Pirates.png"))); // NOI18N
     scorePanel.add(playerOne);
 
+    scoreOne.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+    scoreOne.setForeground(new java.awt.Color(255, 255, 0));
     scoreOne.setText("0");
     scorePanel.add(scoreOne);
 
-    playerTwo.setText("Player 2:");
+    playerTwo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Ninja.png"))); // NOI18N
     scorePanel.add(playerTwo);
 
+    scoreTwo.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+    scoreTwo.setForeground(new java.awt.Color(255, 255, 0));
     scoreTwo.setText("0");
     scorePanel.add(scoreTwo);
 
     controlPanel.add(scorePanel, java.awt.BorderLayout.NORTH);
 
-    javax.swing.GroupLayout emptyPanelLayout = new javax.swing.GroupLayout(emptyPanel);
-    emptyPanel.setLayout(emptyPanelLayout);
-    emptyPanelLayout.setHorizontalGroup(
-      emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 119, Short.MAX_VALUE)
-    );
-    emptyPanelLayout.setVerticalGroup(
-      emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 233, Short.MAX_VALUE)
-    );
+    emptyPanel.setBackground(new java.awt.Color(143, 107, 57));
+    emptyPanel.setLayout(new java.awt.GridLayout());
+
+    jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/menu.png"))); // NOI18N
+    emptyPanel.add(jLabel1);
 
     controlPanel.add(emptyPanel, java.awt.BorderLayout.CENTER);
+
+    newButtonPanel.setBackground(new java.awt.Color(143, 107, 57));
+    newButtonPanel.setForeground(new java.awt.Color(143, 107, 57));
+    newButtonPanel.setLayout(new java.awt.GridLayout(3, 0));
+
+    jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+    jLabel2.setForeground(new java.awt.Color(255, 255, 0));
+    jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/plan.png"))); // NOI18N
+    jLabel2.setText("Plan:");
+    newButtonPanel.add(jLabel2);
+    newButtonPanel.add(jLabel3);
 
     newGame.setText("New Game");
     newGame.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -98,35 +118,20 @@ public class Frame extends javax.swing.JFrame {
         newGameMouseClicked(evt);
       }
     });
-
-    javax.swing.GroupLayout newButtonPanelLayout = new javax.swing.GroupLayout(newButtonPanel);
-    newButtonPanel.setLayout(newButtonPanelLayout);
-    newButtonPanelLayout.setHorizontalGroup(
-      newButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(newButtonPanelLayout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(newGame)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-    newButtonPanelLayout.setVerticalGroup(
-      newButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newButtonPanelLayout.createSequentialGroup()
-        .addContainerGap(40, Short.MAX_VALUE)
-        .addComponent(newGame)
-        .addGap(37, 37, 37))
-    );
+    newButtonPanel.add(newGame);
 
     controlPanel.add(newButtonPanel, java.awt.BorderLayout.SOUTH);
 
     getContentPane().add(controlPanel, java.awt.BorderLayout.EAST);
 
+    gamePanel.setBackground(new java.awt.Color(143, 107, 57));
     gamePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     gamePanel.setLayout(new java.awt.GridLayout(3, 3));
 
     grid11.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid11.setText(" ");
-    grid11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid11.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid11.setName("grid11"); // NOI18N
     grid11.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -138,7 +143,7 @@ public class Frame extends javax.swing.JFrame {
     grid12.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid12.setText(" ");
-    grid12.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid12.setName("grid12"); // NOI18N
     grid12.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -150,7 +155,7 @@ public class Frame extends javax.swing.JFrame {
     grid13.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid13.setText(" ");
-    grid13.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid13.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid13.setName("grid13"); // NOI18N
     grid13.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -162,7 +167,7 @@ public class Frame extends javax.swing.JFrame {
     grid21.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid21.setText(" ");
-    grid21.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid21.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid21.setName("grid21"); // NOI18N
     grid21.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -174,7 +179,7 @@ public class Frame extends javax.swing.JFrame {
     grid22.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid22.setText(" ");
-    grid22.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid22.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid22.setName("grid22"); // NOI18N
     grid22.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -186,7 +191,7 @@ public class Frame extends javax.swing.JFrame {
     grid23.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid23.setText(" ");
-    grid23.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid23.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid23.setName("grid23"); // NOI18N
     grid23.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -198,7 +203,7 @@ public class Frame extends javax.swing.JFrame {
     grid31.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid31.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid31.setText(" ");
-    grid31.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid31.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid31.setName("grid31"); // NOI18N
     grid31.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -210,7 +215,7 @@ public class Frame extends javax.swing.JFrame {
     grid32.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid32.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid32.setText(" ");
-    grid32.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid32.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid32.setName("grid32"); // NOI18N
     grid32.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -222,7 +227,7 @@ public class Frame extends javax.swing.JFrame {
     grid33.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
     grid33.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     grid33.setText(" ");
-    grid33.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    grid33.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 0), 3, true));
     grid33.setName("grid33"); // NOI18N
     grid33.addMouseListener(new java.awt.event.MouseAdapter() {
       public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -239,9 +244,10 @@ public class Frame extends javax.swing.JFrame {
     private void grid11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grid11MouseClicked
       Component c = evt.getComponent();
       if (c instanceof JLabel){ //check we have a JLabel
-        if( " ".equals(((JLabel)c).getText()) && gameOver != true){ // check the Jlabel is empty
+        if( ((JLabel)c).getIcon() == null && gameOver != true && move == true){ // check the Jlabel is empty
           if(game.makeMove(((JLabel)c).getName())){
-            ((JLabel)c).setText("X");
+           // ((JLabel)c).setText("X");
+            ((JLabel)c).setIcon(pirate);
           }
         }
         else
@@ -249,10 +255,24 @@ public class Frame extends javax.swing.JFrame {
           return;
         }
       }
-      gameOver(true);
+      gameOver(move);
       if(gameOver != true){
-        agentTurn();
-        gameOver(false);
+         move = false;
+         Thread t = new Thread(){
+          @Override
+          public void run() {
+            try {
+              sleep(2000);
+              agentTurn();
+              gameOver(move);
+              move = true;
+             } 
+            catch (InterruptedException ex) {
+              Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          }
+         };  
+        t.start(); 
       }
     }//GEN-LAST:event_grid11MouseClicked
 
@@ -265,8 +285,9 @@ public class Frame extends javax.swing.JFrame {
     private void handleGridMouseClick( int row, int column )
     {       
       // perform the human move
-      JLabel label = getLabel( row + 1, column + 1 );
-             label.setText( "0" );
+      JLabel label = getLabel( row + 1, column + 1 );    
+             //label.setText("O");
+             label.setIcon(ninja);
              // fire the rules to see if game is over (won/drawn)
       }                 
     
@@ -297,7 +318,7 @@ public class Frame extends javax.swing.JFrame {
      {
       Component toChange =  gamePanel.getComponent(i);
       ((JLabel)toChange).setText(" ");
-      
+      ((JLabel)toChange).setIcon(null);
      }
     }
     
@@ -379,6 +400,9 @@ public class Frame extends javax.swing.JFrame {
   private javax.swing.JLabel grid31;
   private javax.swing.JLabel grid32;
   private javax.swing.JLabel grid33;
+  private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel newButtonPanel;
   private javax.swing.JButton newGame;
   private javax.swing.JLabel playerOne;
