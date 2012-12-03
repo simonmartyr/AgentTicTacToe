@@ -5,7 +5,10 @@
 package gui;
 
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.GradientPaint;
+import java.awt.Image;
 import javax.swing.JLabel;
 import logic.Facade;
 /**
@@ -15,6 +18,7 @@ import logic.Facade;
 public class Frame extends javax.swing.JFrame {
   private Facade game = new Facade();
   private boolean gameOver = false;
+ 
     /**
      * Creates new form AgentFrame
      */
@@ -235,13 +239,21 @@ public class Frame extends javax.swing.JFrame {
     private void grid11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grid11MouseClicked
       Component c = evt.getComponent();
       if (c instanceof JLabel){ //check we have a JLabel
-        if( " ".equals(((JLabel)c).getText())){ // check the Jlabel is empty
+        if( " ".equals(((JLabel)c).getText()) && gameOver != true){ // check the Jlabel is empty
           if(game.makeMove(((JLabel)c).getName())){
             ((JLabel)c).setText("X");
           }
         }
+        else
+        {
+          return;
+        }
       }
-      agentTurn();
+      gameOver(true);
+      if(gameOver != true){
+        agentTurn();
+        gameOver(false);
+      }
     }//GEN-LAST:event_grid11MouseClicked
 
     private void agentTurn(){
@@ -255,12 +267,7 @@ public class Frame extends javax.swing.JFrame {
       // perform the human move
       JLabel label = getLabel( row + 1, column + 1 );
              label.setText( "0" );
-             game.makeMove(label.getName());
              // fire the rules to see if game is over (won/drawn)
-
-             if( gameOver == true )  // human won or it's a draw
-             {
-             }
       }                 
     
     private JLabel getLabel(int row, int column){
@@ -284,6 +291,7 @@ public class Frame extends javax.swing.JFrame {
 
     private void newGame() {
      game.newGame();
+     gameOver = false;
      int comps =  gamePanel.getComponents().length;
      for(int i = 0; i < comps; i++ )
      {
@@ -291,6 +299,30 @@ public class Frame extends javax.swing.JFrame {
       ((JLabel)toChange).setText(" ");
       
      }
+    }
+    
+    private void gameOver(boolean winner){
+      int store;
+      if(game.gameOver()){
+        if(game.win()){
+          if(winner){
+            store = Integer.parseInt(scoreOne.getText());
+            store++;
+            scoreOne.setText(Integer.toString(store));
+          }
+          else
+          {
+            store = Integer.parseInt(scoreTwo.getText());
+            store++;
+            scoreTwo.setText(Integer.toString(store));
+          }
+        }
+        gameOver = true;
+      }
+      else
+      {
+        gameOver = false;
+      }
     }
     /**
      * @param args the command line arguments

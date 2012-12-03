@@ -9,109 +9,91 @@ package logic;
  * @author Si
  */
 public class GameWonRule extends Rule {
-  
   public GameWonRule( FiniteStateMachine fsm )
   {
      super(fsm);
      // TODO pass the fsm reference to the superclass
   }
   
+  @Override
   public boolean fire( )
   {
-    boolean found = false;
-    int index = 0; //index holder
-    
-    //horz win find
-    while(index < FiniteStateMachine.NUMBEROFROWS)
-    {
-      for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
-      {
-        if (j > 0){
-          if(grid[ index ][ j - 1 ].equals(grid[ index ][ j ]) && grid[ index ][ j ] != FiniteStateMachine.State.blank)
-          {
-            if(j == FiniteStateMachine.NUMBEROFCOLUMNS - 1){
-              found = true;
-            }
-          }
-          else
-          {
-            break; // conflict
-          }
-        }  
-      }
-      index++;
+    if(Horizontal()){
+      return true;
+    }
+    if(Vertical()){
+      return true;
+    }
+    if(Diagonal()){
+      return true;
     }
     
-    index = 0; //reset index
-    
-    //vertical win find
-    if(!found){
+    return false;
+  }
+  
+  private boolean Horizontal(){
+      int crossCount = 0, noughtCount = 0, index = 0;
       while(index < FiniteStateMachine.NUMBEROFROWS)
       {
-        for( int i = 0; i < FiniteStateMachine.NUMBEROFCOLUMNS; i++ )
+        for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
         {
-          if (i > 0)
-          {
-            if(grid[ i -1 ][ index ].equals(grid[ i ][ index ]) && grid[ i ][ index ] != FiniteStateMachine.State.blank)
-            {
-              if(i == FiniteStateMachine.NUMBEROFCOLUMNS - 1)
-              {
-                found = true;
-              }
-            }
-            else
-            {
-              break; // conflict
-            }
+          crossCount = (grid[index][j] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
+          noughtCount = (grid[index][j] == FiniteStateMachine.State.nought) ? noughtCount + 1 : noughtCount;
+          if(crossCount == FiniteStateMachine.NUMBEROFCOLUMNS || noughtCount == FiniteStateMachine.NUMBEROFCOLUMNS){
+            return true;
           }
-        }
+        }  
         index++;
+        crossCount = 0;
+        noughtCount = 0;
       }
-    }
-    
-    //Diagonal 
-    if(!found)
-    {
-      for( int i = 0; i < FiniteStateMachine.NUMBEROFROWS; i++ )
-      {
-        if(i > 0)
-        {
-          if(grid[ i - 1 ][ i - 1 ].equals(grid[ i ][ i ]) && grid[ i ][ i ] != FiniteStateMachine.State.blank)
-          {
-            if(i == FiniteStateMachine.NUMBEROFCOLUMNS - 1){
-              found = true;
-            }
-          }
-          else
-          {
-            break; // conflict
-          }
-        }
-      }
-    }
-    
-    if(!found)
-    {
-      int row = FiniteStateMachine.NUMBEROFCOLUMNS;
-      for( int i = 0; i < FiniteStateMachine.NUMBEROFROWS; i++ )
-      {
-        if(i > 0)
-        {
-          if(grid[ row - i][i - 1].equals(grid[ row - i - 1 ][ i ]) && grid[ row - i - 1 ][ i ] != FiniteStateMachine.State.blank)
-          {
-            if(i == FiniteStateMachine.NUMBEROFCOLUMNS - 1)
-            {
-              found = true;
-            }
-          }
-          else
-          {
-            break; // conflict
-          }
-        }
-      }
-    }
-    
-    return found;
+      return false;
   }
+  
+  private boolean Vertical(){
+      int crossCount = 0, noughtCount = 0, index = 0;
+      while(index < FiniteStateMachine.NUMBEROFCOLUMNS)
+      {
+        for( int j = 0; j < FiniteStateMachine.NUMBEROFROWS; j++ )
+        {
+          crossCount = (grid[j][index] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
+          noughtCount = (grid[j][index] == FiniteStateMachine.State.nought) ? noughtCount + 1 : noughtCount;
+          if(crossCount == FiniteStateMachine.NUMBEROFCOLUMNS || noughtCount == FiniteStateMachine.NUMBEROFCOLUMNS){
+            return true;
+          }
+        }  
+        index++;
+        crossCount = 0;
+        noughtCount = 0;
+      }
+      return false;
+    }
+  
+  private boolean Diagonal(){
+      int crossCount = 0, noughtCount = 0;
+      int rows = FiniteStateMachine.NUMBEROFROWS - 1;
+      for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
+      {
+        crossCount = (grid[j][j] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
+        noughtCount = (grid[j][j] == FiniteStateMachine.State.nought) ? noughtCount + 1 : noughtCount;
+        if(crossCount == FiniteStateMachine.NUMBEROFCOLUMNS || noughtCount == FiniteStateMachine.NUMBEROFCOLUMNS){
+          return true;
+        }
+      }  
+      
+      crossCount = 0;
+      noughtCount = 0;
+      
+      for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
+      {
+        crossCount = (grid[rows - j][j] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
+        noughtCount = (grid[rows - j][j] == FiniteStateMachine.State.nought) ? noughtCount + 1 : noughtCount;
+        if(crossCount == FiniteStateMachine.NUMBEROFCOLUMNS || noughtCount == FiniteStateMachine.NUMBEROFCOLUMNS){
+          return true;
+        }
+      }
+      return false;
+    }
+
 }
+
