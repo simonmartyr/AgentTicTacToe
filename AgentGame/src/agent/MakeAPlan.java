@@ -7,6 +7,7 @@ package agent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import logic.FiniteStateMachine;
 
 /**
@@ -17,28 +18,32 @@ public class MakeAPlan extends Belief {
   private List< Action > thePlan = new ArrayList< Action >( ); //choosen plan (random)
   private List< Action[] > plans = new ArrayList< Action[] >( ); //list of possible plans
   private int index = 0, blankCount = 0, crossCount = 0; // counters
-  
+  private String planed = " ";
    public MakeAPlan (FiniteStateMachine fsm )
   {
     super(fsm);
     // TODO
   }
+  public String getPlan()
+  { 
+    return planed;
+  }
    
   @Override
    public void update( )
   {
-    
+    int move;
     if(!thePlan.isEmpty()){ //we have a plan
       if(planAchieveable()){
-        int move = getRandomInRange( 1, thePlan.size( ) );
-        action = thePlan.get(move); //make this move
-        thePlan.remove(move); //clear from move list
-        predicate = true;  
+          move = getRandomInRange( 1, thePlan.size( ) );
+          action = thePlan.get(move); //make this move
+          thePlan.remove(move); //clear from move list
+          predicate = true;  
       }
       else{
         if(createAPlan()) //new plan
         {
-          int move = getRandomInRange( 1, thePlan.size( ) );
+          move = getRandomInRange( 1, thePlan.size( ) );
           action = thePlan.get(move); //make this move
           thePlan.remove(move); //clear from move list
           predicate = true; 
@@ -49,11 +54,12 @@ public class MakeAPlan extends Belief {
     
     if(plans.isEmpty()){ //we dont have any plans
       if(createAPlan()){
-        int move = getRandomInRange( 1, thePlan.size( ) );
-        for(int i=0; i< thePlan.size(); i++){
-          System.out.println(thePlan.get(i).getRow() + "" + thePlan.get(i).getColumn());
+        if(thePlan.indexOf(new Action(1,1)) != -1){
+          move = thePlan.indexOf(new Action(1,1));
         }
-        
+        else{
+          move = getRandomInRange( 1, thePlan.size( ) );
+        }
         action = thePlan.get(move); //make this move
         thePlan.remove(move); //clear from move list
         predicate = true;  
@@ -65,16 +71,22 @@ public class MakeAPlan extends Belief {
    
    private boolean createAPlan()
    {
+     plans.clear(); //insure that the list is empty
      Action[] populate; 
      Horizontal();
      Vertical();
      Diagonal();
-     int randomNumber = getRandomInRange( 1, plans.size( ) ); // choose a plan at random
-     System.out.println(randomNumber);
+     int randomNumber = choosePlan(  plans.size() ); // choose a plan at random
      if(!plans.isEmpty())
      {
        populate = plans.get(randomNumber);
        thePlan.addAll(Arrays.asList(populate));
+       for(int i=0; i< thePlan.size(); i++){
+         if(thePlan.get(i) != null){
+            planed += thePlan.get(i).getRow() + "" + thePlan.get(i).getColumn() + " ";
+         }
+        }
+       planed += " , ";
        return true;
      }
      return false;
@@ -188,12 +200,16 @@ public class MakeAPlan extends Belief {
       blankCount = 0;
     }      
     
-    private int getRandomInRange( int lower, int higher )
-    {
-      return (int) ( Math.floor( Math.random( ) * 
-                   ( higher - lower - 1 ) ) + lower );
-    }
+ private int getRandomInRange( int lower, int higher )
+ {
+    return (int) ( Math.floor( Math.random( ) * 
+                 ( higher - lower - 1 ) ) + lower );
+ }
+  private int choosePlan(  int higher )
+ {
+   Random r = new Random();
+   return (int) r.nextInt(higher);
        
-   
+ }
    
 }

@@ -22,6 +22,9 @@ public class Agent {
     block = new ICanBlockAWin(fsm);
   }
   
+  public String whatWasPlan(){
+    return plan.getPlan();
+  }
   public Action getNextMove(FiniteStateMachine fsm){
     win = new ICanWin(fsm);
     move = new ICanMakeAMove(fsm);

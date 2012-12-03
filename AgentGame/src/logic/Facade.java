@@ -50,13 +50,17 @@ public class Facade {
       return thomas.GameWon(finny);
     }
     
-    public boolean winner(){
-      return move; //last person to make a move
+    public String[] winingMove(){
+      return thomas.winningMove(); //last person to make a move
     }
     
     public void newGame(){ //reset everything
      finny = new FiniteStateMachine();
      james = new Agent(finny);
      
+    }
+    
+    public String plan(){
+      return james.whatWasPlan();
     }
 }
