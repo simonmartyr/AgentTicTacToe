@@ -10,6 +10,7 @@ package agent;
  */
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 import logic.FiniteStateMachine;
 
 public class ICanMakeAMove extends Belief {
@@ -42,15 +43,15 @@ public class ICanMakeAMove extends Belief {
     }    
     assert blanks.size( ) > 1 : "impossible! no blank cells";
     // generate a random number
-    final int randomNumber = getRandomInRange( 1, blanks.size( ) );
+    final int randomNumber = getRandomInRange(  blanks.size( ) );
     // get a blank cell at random – A REALLY NAIVE WAY TO DO THIS!!!
-    action = blanks.get( randomNumber - 1 );   
+    action = blanks.get( randomNumber );   
     predicate = true;   // now I believe it!!
     }
   
-    private int getRandomInRange( int lower, int higher )
+    private int getRandomInRange(  int higher )
     {
-      return (int) ( Math.floor( Math.random( ) * 
-                   ( higher - lower - 1 ) ) + lower );
+        Random r = new Random();
+        return (int) r.nextInt(higher);
     }
 }

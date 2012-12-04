@@ -17,7 +17,6 @@ import logic.FiniteStateMachine;
 public class MakeAPlan extends Belief {
   private List< Action > thePlan = new ArrayList< Action >( ); //choosen plan (random)
   private List< Action[] > plans = new ArrayList< Action[] >( ); //list of possible plans
-  private int index = 0, blankCount = 0, crossCount = 0; // counters
   private String planed = " ";
    public MakeAPlan (FiniteStateMachine fsm )
   {
@@ -33,6 +32,8 @@ public class MakeAPlan extends Belief {
    public void update( )
   {
     int move;
+    int middle;
+    
     if(!thePlan.isEmpty()){ //we have a plan
       if(planAchieveable()){
           move = choosePlan( thePlan.size( ) );
@@ -48,13 +49,17 @@ public class MakeAPlan extends Belief {
           thePlan.remove(move); //clear from move list
           predicate = true; 
         }
+        else
+        {
+          predicate = false;
+        }
       }
       return;
     }
     
     if(plans.isEmpty()){ //we dont have any plans
       if(createAPlan()){
-        int middle = middleMove();
+        middle = middleMove();
         if(middle != -1){
           move = middle;
         }
@@ -72,16 +77,21 @@ public class MakeAPlan extends Belief {
    
    private boolean createAPlan()
    {
+     int randomNumber;
      plans.clear(); //insure that the list is empty
+     thePlan.clear(); //fail safe
      Action[] populate; 
      Horizontal();
      Vertical();
-     Diagonal();
-     int randomNumber = choosePlan(  plans.size() ); // choose a plan at random
+     Diagonal();    
      if(!plans.isEmpty())
      {
+       randomNumber = choosePlan(  plans.size() ); // choose a plan at random
        populate = plans.get(randomNumber);
        thePlan.addAll(Arrays.asList(populate));
+       if(thePlan.indexOf(null) != -1){
+         thePlan.remove(thePlan.indexOf(null));
+       }
        for(int i=0; i< thePlan.size(); i++){
          if(thePlan.get(i) != null){
             planed += thePlan.get(i).getRow() + "" + thePlan.get(i).getColumn() + " ";
@@ -108,12 +118,14 @@ public class MakeAPlan extends Belief {
        if(grid[check.getRow()][check.getColumn()] == FiniteStateMachine.State.nought)
        {
          thePlan.remove(i); //unlikely random move hit the plan
+         i--; // need to reset the counter else a check will be misssed
        }
      }
      return true;
    }
            
      private void Horizontal(){
+      int index = 0, blankCount = 0, crossCount = 0;
       Action [] location = new Action[3];
       while(index < FiniteStateMachine.NUMBEROFROWS)
       {
@@ -134,13 +146,13 @@ public class MakeAPlan extends Belief {
         blankCount = 0;
         location = new Action[3];
       }
-      index = 0;
     }
       
       
     
     
     private void Vertical(){
+      int index = 0, blankCount = 0, crossCount = 0;
       Action [] location = new Action[3];
       while(index < FiniteStateMachine.NUMBEROFCOLUMNS)
       {
@@ -161,12 +173,12 @@ public class MakeAPlan extends Belief {
         blankCount = 0;
         location = new Action[3];
       }
-      index = 0;
     }
     
     
     private void Diagonal(){
       Action [] location = new Action[3];
+      int  blankCount = 0, crossCount = 0;
       int rows = FiniteStateMachine.NUMBEROFROWS - 1;
       for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
       {
@@ -175,10 +187,9 @@ public class MakeAPlan extends Belief {
           blankCount ++;
         }
         crossCount = (grid[j][j] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
-
-           if(j == 2 && crossCount == 0){
-            plans.add(location);
-          }
+        if(j == 2 && crossCount == 0){
+          plans.add(location);
+        }
       }  
       
       location = new Action[3];
@@ -188,7 +199,7 @@ public class MakeAPlan extends Belief {
       for( int j = 0; j < FiniteStateMachine.NUMBEROFCOLUMNS; j++ )
       {
         if(grid[rows - j][j] == FiniteStateMachine.State.blank){
-          location[blankCount] = new Action(j,j);
+          location[blankCount] = new Action(rows - j, j);
           blankCount ++;
         }
         crossCount = (grid[rows - j][j] == FiniteStateMachine.State.cross) ? crossCount + 1 : crossCount;
