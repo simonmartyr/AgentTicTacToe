@@ -31,4 +31,9 @@ public class Action {
     
   }
   
+  @Override
+  public String toString(){
+    return Integer.toString(row) + Integer.toString(column);
+  }
+  
 }

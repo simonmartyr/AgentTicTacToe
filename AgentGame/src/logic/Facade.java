@@ -60,6 +60,10 @@ public class Facade {
      
     }
     
+    public void togglePlan(boolean allow){ //plan on and off
+      james.allowPlan(allow);
+    }
+    
     public String plan(){
       return james.whatWasPlan();
     }

@@ -35,7 +35,7 @@ public class MakeAPlan extends Belief {
     int move;
     if(!thePlan.isEmpty()){ //we have a plan
       if(planAchieveable()){
-          move = getRandomInRange( 1, thePlan.size( ) );
+          move = choosePlan( thePlan.size( ) );
           action = thePlan.get(move); //make this move
           thePlan.remove(move); //clear from move list
           predicate = true;  
@@ -43,7 +43,7 @@ public class MakeAPlan extends Belief {
       else{
         if(createAPlan()) //new plan
         {
-          move = getRandomInRange( 1, thePlan.size( ) );
+          move = choosePlan( thePlan.size( ) );
           action = thePlan.get(move); //make this move
           thePlan.remove(move); //clear from move list
           predicate = true; 
@@ -54,11 +54,12 @@ public class MakeAPlan extends Belief {
     
     if(plans.isEmpty()){ //we dont have any plans
       if(createAPlan()){
-        if(thePlan.indexOf(new Action(1,1)) != -1){
-          move = thePlan.indexOf(new Action(1,1));
+        int middle = middleMove();
+        if(middle != -1){
+          move = middle;
         }
         else{
-          move = getRandomInRange( 1, thePlan.size( ) );
+          move = choosePlan(  thePlan.size( ) );
         }
         action = thePlan.get(move); //make this move
         thePlan.remove(move); //clear from move list
@@ -209,7 +210,18 @@ public class MakeAPlan extends Belief {
  {
    Random r = new Random();
    return (int) r.nextInt(higher);
-       
  }
+  
+  private int middleMove(){
+    Action middle = new Action(1,1);
+    int planSize = thePlan.size(), location = -1;
+    for(int i = 0; i < planSize; i++){
+      if(thePlan.get(i).toString().equals(middle.toString())){
+        location = i;
+        break;
+      }
+    }
+    return location;
+  }
    
 }

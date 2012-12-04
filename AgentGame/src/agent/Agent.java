@@ -15,11 +15,16 @@ public class Agent {
   private ICanMakeAMove move;
   private ICanBlockAWin block;
   private MakeAPlan plan;
+  private boolean planTog = true;
   
   public Agent(FiniteStateMachine fsm){
     win = new ICanWin(fsm);
     move = new ICanMakeAMove(fsm);
     block = new ICanBlockAWin(fsm);
+  }
+  
+  public void allowPlan(boolean allow){
+    planTog = allow;
   }
   
   public String whatWasPlan(){
@@ -30,13 +35,14 @@ public class Agent {
     move = new ICanMakeAMove(fsm);
     block = new ICanBlockAWin(fsm); //reset
     
-    if(plan == null){
-      plan = new MakeAPlan(fsm); //dont wanna reset the plan
+    if(planTog){
+      if(plan == null){
+        plan = new MakeAPlan(fsm); //dont wanna reset the plan
+      }
+      else{
+        plan.updateFSM(fsm);
+      }
     }
-    else{
-      plan.updateFSM(fsm);
-    }
-    
     Action result = null;
     
     win.update();
@@ -48,10 +54,11 @@ public class Agent {
     if(block.isTrue()){
       return block.getAction();
     }
-    
-    plan.update(); //update belifes
-    if(plan.isTrue()){
-      return plan.getAction();
+    if(planTog){
+      plan.update(); //update belifes
+      if(plan.isTrue()){
+        return plan.getAction();
+      }
     }
     
     move.update();
